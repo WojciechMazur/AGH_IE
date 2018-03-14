@@ -1,0 +1,40 @@
+{
+  "name": "activity_tracker",
+  "description": "NodeJS + React + Angular project for Internet Engineering study project",
+  "version": "1.0.0",
+  "main": "app.js",
+  "scripts": {
+    "start": "node .",
+    "test": "mocha",
+    "dev": "nodemon -r babel-register --inspect=5858 -i \"*.test.js\" .",
+    "build": "babel server --out-dir build --presets=es2015 && webpack"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/WojciechMazur/ActivityTracker.git"
+  },
+  "keywords": [],
+  "author": "Wojciech Mazur",
+  "license": "Apache-2.0",
+  "bugs": {
+    "url": "https://github.com/WojciechMazur/ActivityTracker/issues"
+  },
+  "homepage": "https://github.com/WojciechMazur/ActivityTracker",
+  "dependencies": {
+    "babel-runtime": "^6.26.0",
+    "body-parser": "^1.18.2",
+    "es6-promise": "^4.2.4",
+    "express": "^4.16.2",
+    "mongoose": "^5.0.10"
+  },
+  "devDependencies": {
+    "babel-cli": "^6.26.0",
+    "babel-core": "^6.26.0",
+    "babel-plugin-transform-runtime": "^6.23.0",
+    "babel-preset-env": "^1.6.1",
+    "endomondo-unofficial-api": "0.0.9",
+    "mocha": "^5.0.4",
+    "nodemon": "^1.17.1",
+    "source-map-support": "^0.5.3"
+  }
+}
