@@ -4,11 +4,11 @@ const mongoose = require("mongoose");
 const trainingSchema = new mongoose.Schema({
     trainerId: {type: mongoose.SchemaTypes.ObjectId, ref:'Trainer'},
     users:    [{type: mongoose.SchemaTypes.ObjectId, ref: 'User'}],
-    usersLimit: {type: Number,default: 24},
+    usersLimit: {type: Number,default: 24, min: 1},
     date: Date,
     location: String,
     duration: {type: Number, default: 60},
-    description: String,
+    description: {type: String, trim: true},
 
 },{
     versionKey: '_docVersion',

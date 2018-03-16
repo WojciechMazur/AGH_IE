@@ -1,6 +1,7 @@
 import { success, notFound } from '../../services/response/'
 import {mongo} from 'mongoose'
 import {Training} from "./model";
+import config from '../../config'
 import {errorHandler} from "../../services/response";
 
 export const index = (req, res, next) => {
@@ -37,21 +38,28 @@ export const show = (req, res, next) => {
 export const create = (req, res, next) => {
     Training.findOne(
         {
-            $and:[
+            $and: [
                 {date: req.body.date},
                 {location: req.body.location},
                 {trainerId: req.body.trainerId}
             ]
         }, (err, training) => {
-            if(err)
-                res.sendStatus(400)(err);
-            if(training===null){
+            if (training === null) {
                 let training = new Training(req.body);
                 Training.create(training);
                 success(res)(training);
-            }else{
-                console.log("Already exists");
-                res.sendStatus(409);
+            } else {
+                res.status(409).json({
+                    "error": {
+                        "name": "DuplicationError",
+                        "message": `Duplicate key error collection: ${config.dbName}.Trainings, Object with given params already exists`,
+                        "params": {
+                            "date": req.body.date,
+                            "location": req.body.location,
+                            "trainerId": req.body.trainerId
+                        }
+                    }
+                });
             }
         });
 };
