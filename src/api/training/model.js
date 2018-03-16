@@ -2,12 +2,12 @@ import config from "../../config";
 const mongoose = require("mongoose");
 
 const trainingSchema = new mongoose.Schema({
-    trainerId: {type: mongoose.SchemaTypes.ObjectId, ref:'Trainer'},
+    trainerId: {type: mongoose.SchemaTypes.ObjectId, ref:'Trainer', required: true,},
     users:    [{type: mongoose.SchemaTypes.ObjectId, ref: 'User'}],
-    usersLimit: {type: Number,default: 24, min: 1},
-    date: Date,
-    location: String,
-    duration: {type: Number, default: 60},
+    usersLimit: {type: Number,default: 24, min: 1, required: true},
+    date: {type: Date, required: true},
+    location: {type: String, required: true},
+    duration: {type: Number, default: 60, required: true},
     description: {type: String, trim: true},
 
 },{
