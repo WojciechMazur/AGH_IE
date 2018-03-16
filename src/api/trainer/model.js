@@ -1,7 +1,4 @@
 import config from "../../config";
-import {mongo} from "mongoose";
-import assert from "assert";
-
 const mongoose = require("mongoose");
 
 const trainerSchema = new mongoose.Schema({
@@ -16,8 +13,7 @@ const trainerSchema = new mongoose.Schema({
     timestamps: true
 });
 
-mongoose.connect(`${config.mongoURL}/${config.dbName}`).then(
-    () => {console.log("Connection established")},
+mongoose.connect(`${config.mongoURL}/${config.dbName}`).catch(
     err => console.log(`Error while connecting to DB: ${err}`)
 );
 

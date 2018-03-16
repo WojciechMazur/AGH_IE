@@ -22,7 +22,6 @@ export const index = (req, res, next) => {
 };
 
 export const show = (req, res, next) => {
-    console.log(req.params);
     Trainer.findOne({
             "_id": req.params.id
         }
@@ -76,13 +75,12 @@ export const remove = (req, res, next) => {
         "_id": req.params.id
     };
     Trainer.find(conditions)
-        .then((docs) =>{
-            console.log(docs);
-        Trainer.remove(conditions)
-            .then(() => success(res)(docs))
-            .catch((err) => errorHandler(res)(err))
+        .then((docs) => {
+            Trainer.remove(conditions)
+                .then(() => success(res)(docs))
+                .catch((err) => errorHandler(res)(err))
         })
-        .catch((err)=> errorHandler(res)(err));
+        .catch((err) => errorHandler(res)(err));
 };
 
 

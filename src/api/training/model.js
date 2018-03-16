@@ -1,9 +1,10 @@
+import config from "../../config";
 const mongoose = require("mongoose");
 
 const trainingSchema = new mongoose.Schema({
-    trainerId: {type: mongoose.Schema.Types.ObjectId, ref:'Trainer'},
-    users:    [{type: mongoose.Schema.Types.ObjectId, ref: 'User'}],
-    usersLimit: {typ: Number,default: 24},
+    trainerId: {type: mongoose.SchemaTypes.ObjectId, ref:'Trainer'},
+    users:    [{type: mongoose.SchemaTypes.ObjectId, ref: 'User'}],
+    usersLimit: {type: Number,default: 24},
     date: Date,
     location: String,
     duration: {type: Number, default: 60},
@@ -14,5 +15,12 @@ const trainingSchema = new mongoose.Schema({
     timestamps: true
 });
 
-export const Training = mongoose.model('Training', trainingSchema);
+mongoose.connect(`${config.mongoURL}/${config.dbName}`).catch(
+    //() => {console.log(`Connection established ${config.mongoURL}/${config.dbName}`)},
+    err => {
+        console.log(`Error while connecting to DB: ${err}`);
+        process.exit(-1);
+    });
+
+export const Training = mongoose.model('Training', trainingSchema, 'Trainings');
 
