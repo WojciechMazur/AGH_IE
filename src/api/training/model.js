@@ -9,6 +9,9 @@ const trainingSchema = new mongoose.Schema({
     duration: {type: Number, default: 60},
     description: String,
 
+},{
+    versionKey: '_docVersion',
+    timestamps: true
 });
 
 export const Training = mongoose.model('Training', trainingSchema);

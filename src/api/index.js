@@ -4,8 +4,8 @@ import training from './training'
 import trainer from './trainer'
 
 const router = new Router();
-router.use('/trainingSession', trainingSession);
-router.use('/training', training);
-router.use('/trainer', trainer);
+router.use('/trainingSessions', trainingSession);
+router.use('/trainings', training);
+router.use('/trainers', trainer);
 
 export default router
