@@ -1,82 +1,56 @@
 import { success, notFound, errorHandler} from '../../services/response/'
 import {mongo, Types, ObjectId} from 'mongoose'
-import {Trainer} from './model'
+import {User} from './model'
+
+const bcrypt = require("bcrypt");
 
 mongo.Promise = Promise;
 
 
 export const index = (req, res, next) => {
-    Trainer.find(
+    User.find(
         ("query" in req.query) ? JSON.parse(req.query['query']) : {},
     ).limit(parseInt(req.query['limit'])  || 25)
      .skip(parseInt(req.query['offset']) || 0)
-     .sort( ("sort" in req.query) ? JSON.parse(req.query['sort']) : {surname: 1},)
-    .then(
-        docs => {
-         success(res,200)(docs);
-        },
-        err => {
-            errorHandler(res)(err)
-        }
-     );
+     .sort(("sort" in req.query) ? JSON.parse(req.query['sort']) : {surname: 1, name: 1},)
+    .then((users) => users.map((user) => user.view('minimal')))
+    .then(success(res))
+    .catch(next)
 };
 
 export const show = (req, res, next) => {
-    Trainer.findOne({
-            "_id": req.params.id
-        }
-    ).then(
-        doc => {
-            if (doc !== null)
-                success(res)(doc);
-            else
-                notFound(res)(req.params)
-        },
-        err => errorHandler(res)(err)
-    )
+    User.findById(req.params.id).exec()
+    .then((user)=> user ? user.view('full') : null)
+    .then(success(res))
+    .catch(notFound(res))
 };
 
 export const create = (req, res, next) => {
-    Trainer.findOne(
-        {
-            $and:[
-                {name: req.body.name},
-                {surname: req.body.surname},
-                {email: req.body.email}
-            ]
-        }, (err, trainer) => {
-        if(err)
-            res.sendStatus(400)(err);
-        if(trainer===null){
-            console.log("creating");
-            let trainer = new Trainer(req.body);
-            Trainer.create(trainer);
-            res.status(201).end(JSON.stringify(trainer));
-        }else{
-            console.log("Already exists");
-            res.sendStatus(409);
-        }
-    });
+    new User(req.body).save()
+        .then((user)=> user.view('full'))
+        .then((user) => success(res)(user))
+        .catch(next)
 };
-
 
 export const edit = (req, res, next) => {
     const id = req.params.id;
     const body =req.body;
 
-    Trainer.findById(id)
+    User.findById(id)
+        .then(notFound(res))
         .then((doc) => doc ? Object.assign(doc, body).save() : null)
-        .then((response) => success(res)(response))
-        .catch((err) => errorHandler(res)(err))
+        .then((user) => user ? user.view('full') : null)
+        .then(success(res))
+        .catch(next);
 };
 
 export const remove = (req, res, next) => {
     const conditions = ("query" in req.query) ? JSON.parse(req.query['query']) : {
         "_id": req.params.id
     };
-    Trainer.find(conditions)
+    User.find(conditions)
         .then((docs) => {
-            Trainer.remove(conditions)
+            User.remove(conditions)
                 .then(() => success(res)(docs))
                 .catch((err) => errorHandler(res)(err))
         })
