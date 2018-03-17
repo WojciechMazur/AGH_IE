@@ -41,11 +41,10 @@ UserSchema.pre('save', function(next){
 
 UserSchema.methods = {
     comparePasswords(candidatePassword, next) {
-        bcrypt.compare(candidatePassword, this.password, (err, isMatch) => {
-            if (err) return next(err);
-            next(null, isMatch)
-        });
-    },
+        console.log(`${candidatePassword}==${this.password}: ${bcrypt.compareSync(candidatePassword, this.password)}`);
+        return bcrypt.compareSync(candidatePassword, this.password);
+    }
+    ,
     view(type = 'minimal') {
         const base = {
             id: this.id,

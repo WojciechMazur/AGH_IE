@@ -13,7 +13,8 @@ const config = {
     },
     development: {
         mongoURL: process.env.DB_URL || 'mongodb://localhost:27017',
-        dbName: process.env.DB_NAME || 'ActivityTracker'
+        dbName: process.env.DB_NAME || 'ActivityTracker',
+        secret: 'Tester_Chester_Sings_In_Lonesome_Pub_in_Winchester'
     },
     production: {
 

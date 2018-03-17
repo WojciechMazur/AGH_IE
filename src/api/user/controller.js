@@ -1,9 +1,6 @@
 import { success, notFound, errorHandler} from '../../services/response/'
-import {mongo, Types, ObjectId} from 'mongoose'
+import {mongo} from 'mongoose'
 import {User} from './model'
-
-const bcrypt = require("bcrypt");
-
 mongo.Promise = Promise;
 
 
@@ -56,5 +53,4 @@ export const remove = (req, res, next) => {
         })
         .catch((err) => errorHandler(res)(err));
 };
-
 
