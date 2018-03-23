@@ -1,6 +1,7 @@
 import { success, notFound } from '../../services/response/'
 import {mongo} from 'mongoose'
 import {Training} from "./model";
+import {User} from "../user/model"
 import config from '../../config'
 import {errorHandler} from "../../services/response";
 
@@ -86,5 +87,52 @@ export const remove = (req, res, next) => {
         })
         .catch((err)=> errorHandler(res)(err));
 };
+
+export const addUser = (req, res, next) => {
+    const trainingId = req.params.id;
+    const userId = req.params.userId;
+    Promise.all([
+        Training.findById(trainingId),
+        User.findById(userId)
+    ]).then(([training, user]) => {
+        if ((training['users'].indexOf(user.id)>=0))
+            return res.status(200)("User already signed in");
+        if ((training.users.length>training.usersLimit))
+            return res.status(304)("Users limit has been reached");
+        training['users'].push(user.id);
+        training.save()
+            .then(success(res)(training));
+    }).catch((err)=> {
+        console.log(err);
+        res.sendStatus(500)(err)
+    })
+};
+
+export const deleteUser = (req, res, next) => {
+    const trainingId = req.params.id;
+    const userId = req.params.userId;
+    Training.findById(trainingId)
+        .then((training) =>{
+            training.users = training.users.filter(e => e.toString() !== userId);
+            return training;
+        }).then(training=>training.save())
+        .then((training) => {
+            success(res)(training);
+        }).catch((err) => {
+        res.sendStatus(500)(err);
+    });
+};
+
+export const getUsers = (req, res, next)=> {
+    Training.findById(req.params.id)
+        .then(training => training.users)
+        .then(users =>{
+         let asyncUsersInfo=users.map((user) => User.findById(user)
+                .then(user => user.view('minimal')));
+        Promise.all(asyncUsersInfo)
+            .then((users) => success(res)(users));
+        }).catch(err => success(res, 500)(err));
+};
+
 
 

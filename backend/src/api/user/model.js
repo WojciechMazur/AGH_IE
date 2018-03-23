@@ -25,7 +25,6 @@ const UserSchema = new mongoose.Schema({
 UserSchema.pre('save', function(next){
     const user = this;
     //Don't hash if not modified
-    console.log(this);
     if (!user.isModified('password')) return next();
 
     bcrypt.genSalt(SALT_WORK_FACTOR, function (err, salt) {
@@ -41,7 +40,6 @@ UserSchema.pre('save', function(next){
 
 UserSchema.methods = {
     comparePasswords(candidatePassword, next) {
-        console.log(`${candidatePassword}==${this.password}: ${bcrypt.compareSync(candidatePassword, this.password)}`);
         return bcrypt.compareSync(candidatePassword, this.password);
     }
     ,
