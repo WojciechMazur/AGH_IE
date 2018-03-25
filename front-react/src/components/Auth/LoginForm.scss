@@ -1,0 +1,17 @@
+.inline-login{
+  width: fit-content;
+  max-width: 50%;
+  input {
+    margin-right: 1rem;
+    padding-left: 1rem;
+    min-width: 10rem;
+    border-radius: 0.5rem;
+    font-size: 95%;
+  }
+  button{
+    border: none;
+    background-color: transparent;
+    color: #FFF;
+    font-size: 110%;
+  }
+}
